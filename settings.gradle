@@ -1,1 +1,1 @@
-include ':app', ':rtmp', ':encoder', ':rtsp', ':rtplibrary'
+include ':app', ':testapp', ':rtmp', ':encoder', ':rtsp', ':rtplibrary', ':broadcastlib'
