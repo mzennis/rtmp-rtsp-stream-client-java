@@ -1,4 +1,4 @@
-package com.pedro.rtplibrary.base;
+package com.pedro.rtplibrary;
 
 import android.content.Context;
 import android.hardware.camera2.CameraCharacteristics;
@@ -650,24 +650,24 @@ public abstract class CameraBase implements GetAacData, GetVideoData, GetMicroph
    * if you'd like to connect to your backup server instead of the original one.
    * Given backupUrl replaces the original one.
    */
-  public boolean reTry(long delay, String reason, @Nullable String backupUrl) {
+  public boolean retry(long delay, String reason, @Nullable String backupUrl) {
     boolean result = shouldRetry(reason);
     if (result) {
       resetVideoEncoder(true);
-      reConnect(delay, backupUrl);
+      reconnect(delay, backupUrl);
     }
     return result;
   }
 
-  public boolean reTry(long delay, String reason) {
-    return reTry(delay, reason, null);
+  public boolean retry(long delay, String reason) {
+    return retry(delay, reason, null);
   }
 
   protected abstract boolean shouldRetry(String reason);
 
-  public abstract void setReTries(int reTries);
+  public abstract void setRetries(int reTries);
 
-  protected abstract void reConnect(long delay, @Nullable String backupUrl);
+  protected abstract void reconnect(long delay, @Nullable String backupUrl);
 
   //cache control
   public abstract boolean hasCongestion();

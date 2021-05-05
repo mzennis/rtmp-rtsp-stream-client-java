@@ -1,15 +1,12 @@
-package com.pedro.rtplibrary.rtmp;
+package com.pedro.rtplibrary;
 
 import android.content.Context;
 import android.media.MediaCodec;
 import android.os.Build;
-import android.view.SurfaceView;
-import android.view.TextureView;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
-import com.pedro.rtplibrary.base.CameraBase;
 import com.pedro.rtplibrary.view.LightOpenGlView;
 import com.pedro.rtplibrary.view.OpenGlView;
 
@@ -28,28 +25,6 @@ import java.nio.ByteBuffer;
 public class RtmpCamera extends CameraBase {
 
   private SrsFlvMuxer srsFlvMuxer;
-
-  /**
-   * @deprecated This view produce rotations problems and could be unsupported in future versions.
-   * Use {@link CameraBase#CameraBase(OpenGlView)} or {@link CameraBase#CameraBase(LightOpenGlView)}
-   * instead.
-   */
-  @Deprecated
-  public RtmpCamera(SurfaceView surfaceView, ConnectCheckerRtmp connectChecker) {
-    super(surfaceView);
-    srsFlvMuxer = new SrsFlvMuxer(connectChecker);
-  }
-
-  /**
-   * @deprecated This view produce rotations problems and could be unsupported in future versions.
-   * Use {@link CameraBase#CameraBase(OpenGlView)} or {@link CameraBase#CameraBase(LightOpenGlView)}
-   * instead.
-   */
-  @Deprecated
-  public RtmpCamera(TextureView textureView, ConnectCheckerRtmp connectChecker) {
-    super(textureView);
-    srsFlvMuxer = new SrsFlvMuxer(connectChecker);
-  }
 
   public RtmpCamera(OpenGlView openGlView, ConnectCheckerRtmp connectChecker) {
     super(openGlView);
@@ -163,8 +138,8 @@ public class RtmpCamera extends CameraBase {
   }
 
   @Override
-  public void setReTries(int reTries) {
-    srsFlvMuxer.setReTries(reTries);
+  public void setRetries(int retries) {
+    srsFlvMuxer.setRetries(retries);
   }
 
   @Override
@@ -173,8 +148,8 @@ public class RtmpCamera extends CameraBase {
   }
 
   @Override
-  public void reConnect(long delay, @Nullable String backupUrl) {
-    srsFlvMuxer.reConnect(delay, backupUrl);
+  public void reconnect(long delay, @Nullable String backupUrl) {
+    srsFlvMuxer.reconnect(delay, backupUrl);
   }
 
   @Override

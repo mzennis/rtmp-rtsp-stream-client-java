@@ -14,7 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.pedro.encoder.input.gl.SpriteGestureController
 import com.pedro.encoder.input.video.CameraOpenException
-import com.pedro.rtplibrary.rtmp.RtmpCamera
+import com.pedro.rtplibrary.RtmpCamera
 import com.pedro.rtplibrary.util.BitrateAdapter
 import com.pedro.rtplibrary.view.LightOpenGlView
 import net.ossrs.rtmp.ConnectCheckerRtmp

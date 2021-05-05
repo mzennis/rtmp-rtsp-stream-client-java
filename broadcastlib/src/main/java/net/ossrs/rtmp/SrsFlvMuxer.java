@@ -215,9 +215,9 @@ public class SrsFlvMuxer {
     Log.i(TAG, "worker: disconnect ok.");
   }
 
-  public void setReTries(int reTries) {
-    numRetry = reTries;
-    this.reTries = reTries;
+  public void setRetries(int retries) {
+    numRetry = retries;
+    this.reTries = retries;
   }
 
   public boolean shouldRetry(String reason) {
@@ -225,11 +225,11 @@ public class SrsFlvMuxer {
     return validReason && reTries > 0;
   }
 
-  public void reConnect(final long delay) {
-    reConnect(delay, null);
+  public void reconnect(final long delay) {
+    reconnect(delay, null);
   }
 
-  public void reConnect(final long delay, final String backupUrl) {
+  public void reconnect(final long delay, final String backupUrl) {
     reTries--;
     stop(null);
     runnable = new Runnable() {
