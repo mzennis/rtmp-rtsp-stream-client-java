@@ -47,6 +47,7 @@ import java.nio.ByteBuffer;
  * Created by pedro on 7/07/17.
  */
 
+@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
 public abstract class FromFileBase
     implements GetVideoData, GetAacData, GetMicrophoneData, LoopFileInterface {
 
@@ -298,14 +299,19 @@ public abstract class FromFileBase
     if (audioEnabled) audioDecoder.start();
   }
 
+  @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
   public void replaceView(Context context) {
-    replaceGlInterface(new OffScreenGlThread(context));
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+      replaceGlInterface(new OffScreenGlThread(context));
+    }
   }
 
+  @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
   public void replaceView(OpenGlView openGlView) {
     replaceGlInterface(openGlView);
   }
 
+  @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
   public void replaceView(LightOpenGlView lightOpenGlView) {
     replaceGlInterface(lightOpenGlView);
   }
@@ -313,8 +319,9 @@ public abstract class FromFileBase
   /**
    * Replace glInterface used on fly. Ignored if you use SurfaceView or TextureView
    */
+  @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
   private void replaceGlInterface(GlInterface glInterface) {
-    if (this.glInterface != null && videoEnabled) {
+    if (this.glInterface != null && Build.VERSION.SDK_INT >= 18 && videoEnabled) {
       if (isStreaming() || isRecording()) {
         try {
           this.glInterface.removeMediaCodecSurface();
@@ -500,7 +507,9 @@ public abstract class FromFileBase
    * @param bitrate H264 in bits per second.
    */
   public void setVideoBitrateOnFly(int bitrate) {
-    videoEncoder.setVideoBitrateOnFly(bitrate);
+    if (Build.VERSION.SDK_INT >= 19) {
+      videoEncoder.setVideoBitrateOnFly(bitrate);
+    }
   }
 
   /**

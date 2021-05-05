@@ -15,7 +15,6 @@ import com.pedro.encoder.utils.CodecUtil;
 
 import java.nio.ByteBuffer;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Created by pedro on 19/01/17.
@@ -146,7 +145,7 @@ public class AudioEncoder extends BaseEncoder implements GetMicrophoneData {
 
     Log.i(TAG, mediaCodecInfoList.size() + " encoders found");
     for (MediaCodecInfo mci : mediaCodecInfoList) {
-      String name = mci.getName().toLowerCase(Locale.ROOT);
+      String name = mci.getName().toLowerCase();
       Log.i(TAG, "Encoder " + mci.getName());
       if (name.contains("omx.google") && mediaCodecInfoList.size() > 1) {
         //skip omx.google.aac.encoder if possible

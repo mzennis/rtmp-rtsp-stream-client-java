@@ -18,6 +18,7 @@ import com.pedro.encoder.input.video.CameraHelper;
 
 public class FaceDetectorUtil {
 
+  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   public static FaceParsed camera2Parse(Face face, Rect scaleSensor, int sensorOrientation, int rotation, CameraHelper.Facing facing) {
     return cameraParse(face.getBounds(), scaleSensor, sensorOrientation, rotation, facing, 100);
   }
@@ -30,7 +31,7 @@ public class FaceDetectorUtil {
    * Parse bounds from camera1 and camera2 api to scale and position used in OpenGlView filters.
    */
   private static FaceParsed cameraParse(Rect face, Rect scaleSensor, int sensorOrientation, int streamRotation,
-                                        CameraHelper.Facing facing, float translate) {
+    CameraHelper.Facing facing, float translate) {
     // Face Detection Matrix
     Matrix matrix = new Matrix();
     // Need mirror for front camera.

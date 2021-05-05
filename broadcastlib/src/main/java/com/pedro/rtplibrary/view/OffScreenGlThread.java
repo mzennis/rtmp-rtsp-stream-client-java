@@ -20,6 +20,8 @@ import java.util.concurrent.Semaphore;
 /**
  * Created by pedro on 4/03/18.
  */
+
+@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
 public class OffScreenGlThread
     implements GlInterface, Runnable, SurfaceTexture.OnFrameAvailableListener {
 

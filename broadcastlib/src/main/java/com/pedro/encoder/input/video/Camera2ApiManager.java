@@ -53,6 +53,7 @@ import static com.pedro.encoder.input.video.CameraHelper.getFingerSpacing;
  * https://github.com/google/grafika
  */
 
+@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class Camera2ApiManager extends CameraDevice.StateCallback {
 
   private final String TAG = "Camera2ApiManager";

@@ -13,6 +13,8 @@ import com.pedro.encoder.utils.gl.GlUtil;
 /**
  * Created by pedro on 29/01/18.
  */
+
+@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
 public abstract class BaseFilterRender extends BaseRenderOffScreen {
 
   private int width;

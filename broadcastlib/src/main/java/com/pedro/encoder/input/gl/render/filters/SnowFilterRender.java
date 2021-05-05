@@ -9,11 +9,11 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
+import com.pedro.encoder.R;
 import com.pedro.encoder.input.gl.TextureLoader;
 import com.pedro.encoder.utils.gl.GlUtil;
 import com.pedro.encoder.utils.gl.ImageStreamObject;
 import com.pedro.encoder.utils.gl.StreamObjectBase;
-import com.pedro.broadcastlib.R;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -21,6 +21,8 @@ import java.nio.ByteOrder;
 /**
  * Created by pedro on 19/12/18.
  */
+
+@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
 public class SnowFilterRender extends BaseFilterRender {
 
   //rotation matrix

@@ -66,8 +66,8 @@ public class VideoEncoder extends BaseEncoder implements GetCameraData {
    * Prepare encoder with custom parameters
    */
   public boolean prepareVideoEncoder(int width, int height, int fps, int bitRate, int rotation,
-                                     int iFrameInterval, FormatVideoEncoder formatVideoEncoder, int avcProfile,
-                                     int avcProfileLevel) {
+      int iFrameInterval, FormatVideoEncoder formatVideoEncoder, int avcProfile,
+      int avcProfileLevel) {
     this.width = width;
     this.height = height;
     this.fps = fps;
@@ -133,7 +133,8 @@ public class VideoEncoder extends BaseEncoder implements GetCameraData {
       }
       codec.configure(videoFormat, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
       running = false;
-      if (formatVideoEncoder == FormatVideoEncoder.SURFACE) {
+      if (formatVideoEncoder == FormatVideoEncoder.SURFACE
+          && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
         isBufferMode = false;
         inputSurface = codec.createInputSurface();
       }
@@ -146,6 +147,7 @@ public class VideoEncoder extends BaseEncoder implements GetCameraData {
     }
   }
 
+  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   private boolean isCBRModeSupported(MediaCodecInfo mediaCodecInfo) {
     MediaCodecInfo.CodecCapabilities codecCapabilities =
         mediaCodecInfo.getCapabilitiesForType(type);
@@ -178,7 +180,12 @@ public class VideoEncoder extends BaseEncoder implements GetCameraData {
   }
 
   public void forceKeyFrame() {
-    requestKeyframe();
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+      requestKeyframe();
+    } else {
+      //The only way to force keyframe if api < 19 is reset it.
+      reset();
+    }
   }
 
   @Override
@@ -208,6 +215,7 @@ public class VideoEncoder extends BaseEncoder implements GetCameraData {
         formatVideoEncoder, avcProfile, avcProfileLevel);
   }
 
+  @RequiresApi(api = Build.VERSION_CODES.KITKAT)
   public void setVideoBitrateOnFly(int bitrate) {
     if (isRunning()) {
       this.bitRate = bitrate;
@@ -221,6 +229,7 @@ public class VideoEncoder extends BaseEncoder implements GetCameraData {
     }
   }
 
+  @RequiresApi(api = Build.VERSION_CODES.KITKAT)
   public void requestKeyframe() {
     if (isRunning()) {
       if (spsPpsSetted) {
@@ -452,7 +461,7 @@ public class VideoEncoder extends BaseEncoder implements GetCameraData {
   @Override
   protected void checkBuffer(@NonNull ByteBuffer byteBuffer,
       @NonNull MediaCodec.BufferInfo bufferInfo) {
-    if (forceKey) {
+    if (forceKey && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
       forceKey = false;
       requestKeyframe();
     }

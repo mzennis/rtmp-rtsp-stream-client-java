@@ -20,6 +20,8 @@ import com.pedro.broadcastlib.R;
 /**
  * Created by pedro on 9/09/17.
  */
+
+@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
 public class OpenGlView extends OpenGlViewBase {
 
   private ManagerRender managerRender = null;

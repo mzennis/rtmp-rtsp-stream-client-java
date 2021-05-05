@@ -7,8 +7,8 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
+import com.pedro.encoder.R;
 import com.pedro.encoder.utils.gl.GlUtil;
-import com.pedro.broadcastlib.R;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -16,6 +16,8 @@ import java.nio.ByteOrder;
 /**
  * Created by pedro on 4/02/18.
  */
+
+@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
 public class HalftoneLinesFilterRender extends BaseFilterRender {
 
   //rotation matrix
@@ -133,7 +135,11 @@ public class HalftoneLinesFilterRender extends BaseFilterRender {
   public void setMode(int mode) {
     if (mode < 1) {
       this.mode = 1;
-    } else this.mode = Math.min(mode, 7);
+    } else if (mode > 7) {
+      this.mode = 7;
+    } else {
+      this.mode = mode;
+    }
   }
 
   public void setRows(float rows) {

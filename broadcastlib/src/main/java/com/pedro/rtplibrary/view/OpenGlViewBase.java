@@ -21,6 +21,8 @@ import java.util.concurrent.Semaphore;
 /**
  * Created by pedro on 10/03/18.
  */
+
+@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
 public abstract class OpenGlViewBase extends SurfaceView
     implements GlInterface, Runnable, SurfaceTexture.OnFrameAvailableListener,
     SurfaceHolder.Callback {

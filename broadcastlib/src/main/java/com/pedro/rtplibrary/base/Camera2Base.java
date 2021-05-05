@@ -57,6 +57,7 @@ import java.util.List;
  *
  * Created by pedro on 7/07/17.
  */
+@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public abstract class Camera2Base implements GetAacData, GetVideoData, GetMicrophoneData {
 
   private static final String TAG = "Camera2Base";
@@ -420,7 +421,7 @@ public abstract class Camera2Base implements GetAacData, GetVideoData, GetMicrop
    * OpenGl.
    */
   private void replaceGlInterface(GlInterface glInterface) {
-    if (this.glInterface != null) {
+    if (this.glInterface != null && Build.VERSION.SDK_INT >= 18) {
       if (isStreaming() || isRecording() || isOnPreview()) {
         cameraManager.closeCamera();
         this.glInterface.removeMediaCodecSurface();

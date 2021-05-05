@@ -16,6 +16,8 @@ import java.util.List;
 /**
  * Created by pedro on 27/01/18.
  */
+
+@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
 public class ManagerRender {
 
   //Increase it to render more than 1 filter and set filter by position.

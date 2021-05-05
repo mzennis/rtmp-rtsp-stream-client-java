@@ -58,13 +58,16 @@ public abstract class BaseEncoder implements EncoderCallback {
       codec.start();
     } else {
       codec.start();
-      handler.post(() -> {
-        while (running) {
-          try {
-            getDataFromEncoder();
-          } catch (IllegalStateException e) {
-            Log.i(TAG, "Encoding error", e);
-            reloadCodec();
+      handler.post(new Runnable() {
+        @Override
+        public void run() {
+          while (running) {
+            try {
+              getDataFromEncoder();
+            } catch (IllegalStateException e) {
+              Log.i(TAG, "Encoding error", e);
+              reloadCodec();
+            }
           }
         }
       });

@@ -17,9 +17,9 @@ import android.view.View;
 
 import androidx.annotation.RequiresApi;
 
+import com.pedro.encoder.R;
 import com.pedro.encoder.utils.gl.GlUtil;
 import com.pedro.encoder.utils.gl.TranslateTo;
-import com.pedro.broadcastlib.R;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -27,6 +27,8 @@ import java.nio.ByteOrder;
 /**
  * Created by pedro on 4/02/18.
  */
+
+@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
 public class AndroidViewFilterRender extends BaseFilterRender {
 
   //rotation matrix
@@ -110,10 +112,13 @@ public class AndroidViewFilterRender extends BaseFilterRender {
         renderingView = false;
         //Sometimes draw could crash if you don't use main thread. Ensuring you can render always
       } catch (Exception e) {
-        mainHandler.post(() -> {
-          view.draw(canvas);
-          surface.unlockCanvasAndPost(canvas);
-          renderingView = false;
+        mainHandler.post(new Runnable() {
+          @Override
+          public void run() {
+            view.draw(canvas);
+            surface.unlockCanvasAndPost(canvas);
+            renderingView = false;
+          }
         });
       }
     }
@@ -220,7 +225,11 @@ public class AndroidViewFilterRender extends BaseFilterRender {
   public void setRotation(int rotation) {
     if (rotation < 0) {
       this.rotation = 0;
-    } else this.rotation = Math.min(rotation, 360);
+    } else if (rotation > 360) {
+      this.rotation = 360;
+    } else {
+      this.rotation = rotation;
+    }
   }
 
   public void setScale(float scaleX, float scaleY) {

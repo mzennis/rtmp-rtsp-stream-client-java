@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright 2014 Google, Inc. All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -148,11 +148,11 @@ public class GifHeaderParser {
             // Application extension.
             case 0xff:
               readBlock();
-              StringBuilder app = new StringBuilder();
+              String app = "";
               for (int i = 0; i < 11; i++) {
-                app.append((char) block[i]);
+                app += (char) block[i];
               }
-              if (app.toString().equals("NETSCAPE2.0")) {
+              if (app.equals("NETSCAPE2.0")) {
                 readNetscapeExt();
               } else {
                 // Don't care.
@@ -275,11 +275,11 @@ public class GifHeaderParser {
    * Reads GIF file header information.
    */
   private void readHeader() {
-    StringBuilder id = new StringBuilder();
+    String id = "";
     for (int i = 0; i < 6; i++) {
-      id.append((char) read());
+      id += (char) read();
     }
-    if (!id.toString().startsWith("GIF")) {
+    if (!id.startsWith("GIF")) {
       header.status = GifDecoder.STATUS_FORMAT_ERROR;
       return;
     }
@@ -367,7 +367,6 @@ public class GifHeaderParser {
         rawData.position(rawData.position() + blockSize);
       } while (blockSize > 0);
     } catch (IllegalArgumentException ex) {
-      // ignore
     }
   }
 

@@ -46,6 +46,7 @@ public class RecordController {
     void onStatusChange(Status status);
   }
 
+  @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
   public void startRecord(@NonNull String path, @Nullable Listener listener) throws IOException {
     mediaMuxer = new MediaMuxer(path, MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4);
     this.listener = listener;
@@ -63,6 +64,7 @@ public class RecordController {
     if(isOnlyAudio && audioFormat != null) init();
   }
 
+  @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
   public void stopRecord() {
     status = Status.STOPPED;
     if (mediaMuxer != null) {
@@ -132,6 +134,7 @@ public class RecordController {
     }
   }
 
+  @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
   private void write(int track, ByteBuffer byteBuffer, MediaCodec.BufferInfo info) {
     try {
       mediaMuxer.writeSampleData(track, byteBuffer, info);
@@ -140,6 +143,7 @@ public class RecordController {
     }
   }
 
+  @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
   private void init() {
     audioTrack = mediaMuxer.addTrack(audioFormat);
     mediaMuxer.start();
@@ -147,6 +151,7 @@ public class RecordController {
     if (listener != null) listener.onStatusChange(status);
   }
 
+  @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
   public void recordVideo(ByteBuffer videoBuffer, MediaCodec.BufferInfo videoInfo) {
     if (status == Status.STARTED && videoFormat != null && audioFormat != null) {
       if (videoInfo.flags == MediaCodec.BUFFER_FLAG_KEY_FRAME || isKeyFrame(videoBuffer)) {
@@ -164,6 +169,7 @@ public class RecordController {
     }
   }
 
+  @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
   public void recordAudio(ByteBuffer audioBuffer, MediaCodec.BufferInfo audioInfo) {
     if (status == Status.RECORDING) {
       updateFormat(this.audioInfo, audioInfo);
@@ -178,7 +184,8 @@ public class RecordController {
   public void setAudioFormat(MediaFormat audioFormat, boolean isOnlyAudio) {
     this.audioFormat = audioFormat;
     this.isOnlyAudio = isOnlyAudio;
-    if (isOnlyAudio && status == Status.STARTED) {
+    if (isOnlyAudio && status == Status.STARTED
+        && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
       init();
     }
   }

@@ -13,10 +13,10 @@ import android.view.Surface;
 
 import androidx.annotation.RequiresApi;
 
+import com.pedro.encoder.R;
 import com.pedro.encoder.input.gl.Sprite;
 import com.pedro.encoder.utils.gl.GlUtil;
 import com.pedro.encoder.utils.gl.TranslateTo;
-import com.pedro.broadcastlib.R;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -25,6 +25,8 @@ import java.nio.FloatBuffer;
 /**
  * Created by pedro on 18/07/18.
  */
+
+@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
 public class SurfaceFilterRender extends BaseObjectFilterRender {
 
   public interface SurfaceReadyCallback {
@@ -100,7 +102,12 @@ public class SurfaceFilterRender extends BaseObjectFilterRender {
     surfaceTexture.setDefaultBufferSize(getWidth(), getHeight());
     surface = new Surface(surfaceTexture);
     if (surfaceReadyCallback != null) {
-      new Handler(Looper.getMainLooper()).post(() -> surfaceReadyCallback.surfaceReady(surfaceTexture));
+      new Handler(Looper.getMainLooper()).post(new Runnable() {
+        @Override
+        public void run() {
+          surfaceReadyCallback.surfaceReady(surfaceTexture);
+        }
+      });
     }
   }
 

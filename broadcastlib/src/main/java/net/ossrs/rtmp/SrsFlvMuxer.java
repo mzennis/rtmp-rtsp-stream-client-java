@@ -232,9 +232,12 @@ public class SrsFlvMuxer {
   public void reConnect(final long delay, final String backupUrl) {
     reTries--;
     stop(null);
-    runnable = () -> {
-      String reconnectUrl = backupUrl != null ? backupUrl : url;
-      start(reconnectUrl, true);
+    runnable = new Runnable() {
+      @Override
+      public void run() {
+        String reconnectUrl = backupUrl != null ? backupUrl : url;
+        start(reconnectUrl, true);
+      }
     };
     handler.postDelayed(runnable, delay);
   }
@@ -282,27 +285,30 @@ public class SrsFlvMuxer {
   private void start(final String rtmpUrl, final boolean isRetry) {
     if (!isRetry) doingRetry = true;
     startTs = System.nanoTime() / 1000;
-    worker = new Thread(() -> {
-      Process.setThreadPriority(Process.THREAD_PRIORITY_MORE_FAVORABLE);
-      if (!connect(rtmpUrl)) {
-        return;
-      }
-      if (isRetry) flv.retry();
-      reTries = numRetry;
-      connectCheckerRtmp.onConnectionSuccessRtmp();
-      while (!Thread.interrupted()) {
-        try {
-          SrsFlvFrame frame = mFlvAudioTagCache.poll(1, TimeUnit.MILLISECONDS);
-          if (frame != null) {
-            sendFlvTag(frame);
-          }
+    worker = new Thread(new Runnable() {
+      @Override
+      public void run() {
+        Process.setThreadPriority(Process.THREAD_PRIORITY_MORE_FAVORABLE);
+        if (!connect(rtmpUrl)) {
+          return;
+        }
+        if (isRetry) flv.retry();
+        reTries = numRetry;
+        connectCheckerRtmp.onConnectionSuccessRtmp();
+        while (!Thread.interrupted()) {
+          try {
+            SrsFlvFrame frame = mFlvAudioTagCache.poll(1, TimeUnit.MILLISECONDS);
+            if (frame != null) {
+              sendFlvTag(frame);
+            }
 
-          frame = mFlvVideoTagCache.poll(1, TimeUnit.MILLISECONDS);
-          if (frame != null) {
-            sendFlvTag(frame);
+            frame = mFlvVideoTagCache.poll(1, TimeUnit.MILLISECONDS);
+            if (frame != null) {
+              sendFlvTag(frame);
+            }
+          } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
           }
-        } catch (InterruptedException e) {
-          Thread.currentThread().interrupt();
         }
       }
     });
@@ -334,7 +340,12 @@ public class SrsFlvMuxer {
     needToFindKeyFrame = true;
     Log.i(TAG, "SrsFlvMuxer closed");
 
-    new Thread(() -> disconnect(connectCheckerRtmp)).start();
+    new Thread(new Runnable() {
+      @Override
+      public void run() {
+        disconnect(connectCheckerRtmp);
+      }
+    }).start();
   }
 
   public void sendVideo(ByteBuffer byteBuffer, MediaCodec.BufferInfo bufferInfo) {

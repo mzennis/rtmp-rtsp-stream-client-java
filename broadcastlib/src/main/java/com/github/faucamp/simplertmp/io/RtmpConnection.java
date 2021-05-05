@@ -155,9 +155,13 @@ public class RtmpConnection implements RtmpPublisher {
     rtmpSessionInfo.reset();
     if (!establishConnection()) return false;
     // Start the "main" handling thread
-    rxPacketHandler = new Thread(() -> {
-      Log.d(TAG, "starting main rx handler loop");
-      handleRxPacketLoop();
+    rxPacketHandler = new Thread(new Runnable() {
+
+      @Override
+      public void run() {
+        Log.d(TAG, "starting main rx handler loop");
+        handleRxPacketLoop();
+      }
     });
     rxPacketHandler.start();
     return rtmpConnect();
@@ -622,7 +626,12 @@ public class RtmpConnection implements RtmpPublisher {
             outputStream = new BufferedOutputStream(socket.getOutputStream());
             Log.d(TAG, "connect(): socket connection established, doing handshake...");
             handshake(inputStream, outputStream);
-            rxPacketHandler = new Thread(this::handleRxPacketLoop);
+            rxPacketHandler = new Thread(new Runnable() {
+              @Override
+              public void run() {
+                handleRxPacketLoop();
+              }
+            });
             rxPacketHandler.start();
             if (description.contains("challenge=") && description.contains("salt=")) { //create adobe auth
               String salt = Util.getSalt(description);

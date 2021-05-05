@@ -19,7 +19,7 @@ public class VideoDecoder extends BaseDecoder {
   private int height;
 
   public VideoDecoder(VideoDecoderInterface videoDecoderInterface,
-                      LoopFileInterface loopFileInterface) {
+      LoopFileInterface loopFileInterface) {
     super(loopFileInterface);
     this.videoDecoderInterface = videoDecoderInterface;
   }

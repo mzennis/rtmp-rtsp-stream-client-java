@@ -7,8 +7,8 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
+import com.pedro.encoder.R;
 import com.pedro.encoder.utils.gl.GlUtil;
-import com.pedro.broadcastlib.R;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -16,6 +16,8 @@ import java.nio.ByteOrder;
 /**
  * Created by pedro on 1/02/18.
  */
+
+@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
 public class TemperatureFilterRender extends BaseFilterRender {
 
   //rotation matrix
@@ -98,7 +100,11 @@ public class TemperatureFilterRender extends BaseFilterRender {
   public void setTemperature(float temperature) {
     if (temperature < 0.0f) {
       this.temperature = 0.0f;
-    } else this.temperature = Math.min(temperature, 1.0f);
+    } else if (temperature > 1.0f) {
+      this.temperature = 1.0f;
+    } else {
+      this.temperature = temperature;
+    }
     this.temperature = 2.0f * this.temperature - 1.0f;
   }
 }

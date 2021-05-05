@@ -20,6 +20,7 @@ import java.nio.ByteBuffer;
  *
  * Created by pedro on 9/08/17.
  */
+@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class RtmpDisplay extends DisplayBase {
 
   private SrsFlvMuxer srsFlvMuxer;

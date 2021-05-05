@@ -9,8 +9,8 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
+import com.pedro.encoder.R;
 import com.pedro.encoder.utils.gl.GlUtil;
-import com.pedro.broadcastlib.R;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -20,6 +20,8 @@ import java.util.regex.Pattern;
 /**
  * Created by pedro on 1/02/18.
  */
+
+@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
 public class DuotoneFilterRender extends BaseFilterRender {
 
   //rotation matrix

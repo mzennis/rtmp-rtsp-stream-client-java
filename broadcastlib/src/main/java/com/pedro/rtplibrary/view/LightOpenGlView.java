@@ -22,6 +22,8 @@ import com.pedro.broadcastlib.R;
  *
  * Light version of OpenGlView for devices too slow.
  */
+
+@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
 public class LightOpenGlView extends OpenGlViewBase {
 
   private SimpleCameraRender simpleCameraRender = null;

@@ -2,12 +2,10 @@ package com.github.faucamp.simplertmp.packets;
 
 import com.github.faucamp.simplertmp.Util;
 import com.github.faucamp.simplertmp.io.ChunkStreamInfo;
-import com.pedro.broadcastlib.BuildConfig;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,7 +20,7 @@ public class UserControl extends RtmpPacket {
    * Control message type
    * Docstring adapted from the official Adobe RTMP spec, section 3.7
    */
-  public enum Type {
+  public static enum Type {
 
     /**
      * Type: 0
@@ -122,7 +120,7 @@ public class UserControl extends RtmpPacket {
     BUFFER_READY(32);
 
     private int intValue;
-    private static final Map<Integer, Type> quickLookupMap = new HashMap<>();
+    private static final Map<Integer, Type> quickLookupMap = new HashMap<Integer, Type>();
 
     static {
       for (Type type : Type.values()) {
@@ -130,7 +128,7 @@ public class UserControl extends RtmpPacket {
       }
     }
 
-    Type(int intValue) {
+    private Type(int intValue) {
       this.intValue = intValue;
     }
 
@@ -223,9 +221,7 @@ public class UserControl extends RtmpPacket {
       bytesRead += 4;
     }
     // To ensure some strange non-specified UserControl/ping message does not slip through
-    if (BuildConfig.DEBUG && header.getPacketLength() != bytesRead) {
-      throw new AssertionError("Assertion failed");
-    }
+    assert header.getPacketLength() == bytesRead;
   }
 
   @Override
@@ -251,6 +247,6 @@ public class UserControl extends RtmpPacket {
 
   @Override
   public String toString() {
-    return "RTMP User Control (type: " + type + ", event data: " + Arrays.toString(eventData) + ")";
+    return "RTMP User Control (type: " + type + ", event data: " + eventData + ")";
   }
 }

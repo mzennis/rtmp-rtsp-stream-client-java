@@ -146,11 +146,14 @@ public class MicrophoneManager {
     handlerThread = new HandlerThread(TAG);
     handlerThread.start();
     Handler handler = new Handler(handlerThread.getLooper());
-    handler.post(() -> {
-      while (running) {
-        Frame frame = read();
-        if (frame != null) {
-          getMicrophoneData.inputPCMData(frame);
+    handler.post(new Runnable() {
+      @Override
+      public void run() {
+        while (running) {
+          Frame frame = read();
+          if (frame != null) {
+            getMicrophoneData.inputPCMData(frame);
+          }
         }
       }
     });
@@ -197,7 +200,11 @@ public class MicrophoneManager {
     running = false;
     created = false;
     if (handlerThread != null) {
-      handlerThread.quitSafely();
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+        handlerThread.quitSafely();
+      } else {
+        handlerThread.quit();
+      }
     }
     if (audioRecord != null) {
       audioRecord.setRecordPositionUpdateListener(null);

@@ -10,9 +10,9 @@ import android.view.Surface;
 
 import androidx.annotation.RequiresApi;
 
+import com.pedro.encoder.R;
 import com.pedro.encoder.input.video.CameraHelper;
 import com.pedro.encoder.utils.gl.GlUtil;
-import com.pedro.broadcastlib.R;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -20,6 +20,8 @@ import java.nio.ByteOrder;
 /**
  * Created by pedro on 29/01/18.
  */
+
+@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
 public class CameraRender extends BaseRenderOffScreen {
 
   private int[] textureID = new int[1];

@@ -91,14 +91,17 @@ public abstract class BaseDecoder {
     handlerThread.start();
     Handler handler = new Handler(handlerThread.getLooper());
     codec.start();
-    handler.post(() -> {
-      try {
-        decode();
-      } catch (IllegalStateException e) {
-        Log.i(TAG, "Decoding error", e);
-      } catch (NullPointerException e) {
-        Log.i(TAG, "Decoder maybe was stopped");
-        Log.i(TAG, "Decoding error", e);
+    handler.post(new Runnable() {
+      @Override
+      public void run() {
+        try {
+          decode();
+        } catch (IllegalStateException e) {
+          Log.i(TAG, "Decoding error", e);
+        } catch (NullPointerException e) {
+          Log.i(TAG, "Decoder maybe was stopped");
+          Log.i(TAG, "Decoding error", e);
+        }
       }
     });
   }

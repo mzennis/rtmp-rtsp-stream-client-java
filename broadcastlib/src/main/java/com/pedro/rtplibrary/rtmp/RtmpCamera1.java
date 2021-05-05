@@ -2,10 +2,12 @@ package com.pedro.rtplibrary.rtmp;
 
 import android.content.Context;
 import android.media.MediaCodec;
+import android.os.Build;
 import android.view.SurfaceView;
 import android.view.TextureView;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 
 import com.pedro.rtplibrary.base.Camera1Base;
 import com.pedro.rtplibrary.view.LightOpenGlView;
@@ -37,16 +39,19 @@ public class RtmpCamera1 extends Camera1Base {
     srsFlvMuxer = new SrsFlvMuxer(connectChecker);
   }
 
+  @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
   public RtmpCamera1(OpenGlView openGlView, ConnectCheckerRtmp connectChecker) {
     super(openGlView);
     srsFlvMuxer = new SrsFlvMuxer(connectChecker);
   }
 
+  @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
   public RtmpCamera1(LightOpenGlView lightOpenGlView, ConnectCheckerRtmp connectChecker) {
     super(lightOpenGlView);
     srsFlvMuxer = new SrsFlvMuxer(connectChecker);
   }
 
+  @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
   public RtmpCamera1(Context context, ConnectCheckerRtmp connectChecker) {
     super(context);
     srsFlvMuxer = new SrsFlvMuxer(connectChecker);

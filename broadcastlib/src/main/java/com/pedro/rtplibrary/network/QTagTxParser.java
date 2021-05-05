@@ -118,8 +118,10 @@ class QTagTxParser {
             // If the line is incorrectly formatted, ignore the line.
           } catch (NumberFormatException e) {
             Log.e(TAG, "Cannot parse byte count at line" + line + ".");
+            continue;
           } catch (NoSuchElementException e) {
             Log.e(TAG, "Invalid number of tokens on line " + line + ".");
+            continue;
           }
         }
       } finally {

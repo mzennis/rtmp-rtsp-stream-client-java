@@ -25,7 +25,7 @@ public enum AmfType {
     }
   }
 
-  AmfType(int intValue) {
+  private AmfType(int intValue) {
     this.value = (byte) intValue;
   }
 

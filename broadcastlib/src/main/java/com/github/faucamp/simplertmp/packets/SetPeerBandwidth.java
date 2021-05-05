@@ -21,7 +21,7 @@ public class SetPeerBandwidth extends RtmpPacket {
   /**
    * Bandwidth limiting type
    */
-  public enum LimitType {
+  public static enum LimitType {
 
     /**
      * In a hard (0) request, the peer must send the data in the provided bandwidth.
@@ -43,7 +43,7 @@ public class SetPeerBandwidth extends RtmpPacket {
       }
     }
 
-    LimitType(int intValue) {
+    private LimitType(int intValue) {
       this.intValue = intValue;
     }
 

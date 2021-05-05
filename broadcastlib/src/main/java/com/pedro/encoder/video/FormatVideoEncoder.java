@@ -1,7 +1,6 @@
 package com.pedro.encoder.video;
 
 import android.media.MediaCodecInfo;
-import android.os.Build;
 
 /**
  * Created by pedro on 21/01/17.
@@ -28,9 +27,7 @@ public enum FormatVideoEncoder {
       case YUV420PACKEDSEMIPLANAR:
         return MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420PackedSemiPlanar;
       case YUV422FLEXIBLE:
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-          return MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV422Flexible;
-        }
+        return MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV422Flexible;
       case YUV422PLANAR:
         return MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV422Planar;
       case YUV422SEMIPLANAR:
@@ -40,9 +37,7 @@ public enum FormatVideoEncoder {
       case YUV422PACKEDSEMIPLANAR:
         return MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV422PackedSemiPlanar;
       case YUV444FLEXIBLE:
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-          return MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV444Flexible;
-        }
+        return MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV444Flexible;
       case YUV444INTERLEAVED:
         return MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV444Interleaved;
       case SURFACE:

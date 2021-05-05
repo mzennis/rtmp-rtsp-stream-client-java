@@ -36,7 +36,7 @@ public final class SrsAllocator {
 
     public void put(byte b, int pos) {
       data[pos++] = b;
-      size = Math.max(pos, size);
+      size = pos > size ? pos : size;
     }
 
     public void put(short s) {
@@ -95,7 +95,7 @@ public final class SrsAllocator {
       }
     }
 
-    return new Allocation(Math.max(size, individualAllocationSize));
+    return new Allocation(size > individualAllocationSize ? size : individualAllocationSize);
   }
 
   public synchronized void release(Allocation allocation) {

@@ -46,13 +46,13 @@ public class TLSSocketFactory extends SSLSocketFactory {
   }
 
   @Override
-  public Socket createSocket(String host, int port) throws IOException {
+  public Socket createSocket(String host, int port) throws IOException, UnknownHostException {
     return enableTLSOnSocket(internalSSLSocketFactory.createSocket(host, port));
   }
 
   @Override
   public Socket createSocket(String host, int port, InetAddress localHost, int localPort)
-      throws IOException {
+      throws IOException, UnknownHostException {
     return enableTLSOnSocket(
         internalSSLSocketFactory.createSocket(host, port, localHost, localPort));
   }
@@ -70,7 +70,7 @@ public class TLSSocketFactory extends SSLSocketFactory {
   }
 
   private Socket enableTLSOnSocket(Socket socket) {
-    if (socket instanceof SSLSocket) {
+    if (socket != null && (socket instanceof SSLSocket)) {
       ((SSLSocket) socket).setEnabledProtocols(new String[] { "TLSv1.1", "TLSv1.2" });
     }
     return socket;

@@ -50,6 +50,7 @@ import static android.content.Context.MEDIA_PROJECTION_SERVICE;
  *
  * Created by pedro on 9/08/17.
  */
+@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public abstract class DisplayBase implements GetAacData, GetVideoData, GetMicrophoneData {
 
   private OffScreenGlThread glInterface;

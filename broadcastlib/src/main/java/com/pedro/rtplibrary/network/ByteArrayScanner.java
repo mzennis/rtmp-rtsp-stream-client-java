@@ -49,7 +49,7 @@ class ByteArrayScanner {
 
   /**
    * @return The next token, parsed as a string.
-   * @throws NoSuchElementException throws element exception
+   * @throws NoSuchElementException
    */
   public String nextString() throws NoSuchElementException {
     throwIfNotReset();
@@ -64,7 +64,7 @@ class ByteArrayScanner {
    *
    * @param str String to match the next token with.
    * @return True if the next token matches, false otherwise.
-   * @throws NoSuchElementException throws element exception
+   * @throws NoSuchElementException
    */
   public boolean nextStringEquals(String str) throws NoSuchElementException {
     int offset = mCurrentOffset;
@@ -83,20 +83,21 @@ class ByteArrayScanner {
 
   /**
    * @return The next token, parsed as an integer.
-   * @throws NoSuchElementException throws element exception
+   * @throws NoSuchElementException
    */
   public int nextInt() throws NoSuchElementException {
     throwIfNotReset();
     throwIfDelimiterNotSet();
     int offset = mCurrentOffset;
     int length = advance();
-    return parseInt(mData, offset, offset + length);
+    int value = parseInt(mData, offset, offset + length);
+    return value;
   }
 
   /**
    * Move to the next token.
    *
-   * @throws NoSuchElementException throws element exception
+   * @throws NoSuchElementException
    */
   public void skip() throws NoSuchElementException {
     throwIfNotReset();
@@ -131,7 +132,8 @@ class ByteArrayScanner {
       if (digit < 0 || digit > 9) {
         throw new NumberFormatException("Invalid int in buffer at " + (start - 1) + ".");
       }
-      result = result * radix + digit;
+      int next = result * radix + digit;
+      result = next;
     }
     return result;
   }

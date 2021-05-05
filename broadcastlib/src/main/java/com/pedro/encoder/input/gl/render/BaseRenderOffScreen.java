@@ -13,6 +13,8 @@ import java.nio.FloatBuffer;
 /**
  * Created by pedro on 29/01/18.
  */
+
+@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
 public abstract class BaseRenderOffScreen {
 
   protected FloatBuffer squareVertex;

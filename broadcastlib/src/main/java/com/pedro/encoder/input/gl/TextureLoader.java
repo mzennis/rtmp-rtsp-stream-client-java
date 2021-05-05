@@ -12,6 +12,8 @@ import com.pedro.encoder.utils.gl.GlUtil;
 /**
  * Created by pedro on 9/10/17.
  */
+
+@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
 public class TextureLoader {
 
   public int[] load(Bitmap[] bitmaps) {

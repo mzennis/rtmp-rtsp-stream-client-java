@@ -28,7 +28,7 @@ public class AudioDecoder extends BaseDecoder {
   private boolean muted = false;
 
   public AudioDecoder(GetMicrophoneData getMicrophoneData,
-                      AudioDecoderInterface audioDecoderInterface, LoopFileInterface loopFileInterface) {
+      AudioDecoderInterface audioDecoderInterface, LoopFileInterface loopFileInterface) {
     super(loopFileInterface);
     this.getMicrophoneData = getMicrophoneData;
     this.audioDecoderInterface = audioDecoderInterface;

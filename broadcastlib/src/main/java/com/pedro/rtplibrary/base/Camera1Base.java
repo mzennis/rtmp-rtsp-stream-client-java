@@ -89,6 +89,7 @@ public abstract class Camera1Base
     init();
   }
 
+  @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
   public Camera1Base(OpenGlView openGlView) {
     context = openGlView.getContext();
     this.glInterface = openGlView;
@@ -97,6 +98,7 @@ public abstract class Camera1Base
     init();
   }
 
+  @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
   public Camera1Base(LightOpenGlView lightOpenGlView) {
     context = lightOpenGlView.getContext();
     this.glInterface = lightOpenGlView;
@@ -105,6 +107,7 @@ public abstract class Camera1Base
     init();
   }
 
+  @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
   public Camera1Base(Context context) {
     this.context = context;
     glInterface = new OffScreenGlThread(context);
@@ -338,6 +341,7 @@ public abstract class Camera1Base
    * @param path Where file will be saved.
    * @throws IOException If initialized before a stream.
    */
+  @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
   public void startRecord(@NonNull final String path, @Nullable RecordController.Listener listener)
       throws IOException {
     recordController.startRecord(path, listener);
@@ -348,6 +352,7 @@ public abstract class Camera1Base
     }
   }
 
+  @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
   public void startRecord(@NonNull final String path) throws IOException {
     startRecord(path, null);
   }
@@ -377,19 +382,25 @@ public abstract class Camera1Base
   /**
    * Stop record MP4 video started with @startRecord. If you don't call it file will be unreadable.
    */
+  @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
   public void stopRecord() {
     recordController.stopRecord();
     if (!streaming) stopStream();
   }
 
+  @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
   public void replaceView(Context context) {
-    replaceGlInterface(new OffScreenGlThread(context));
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+      replaceGlInterface(new OffScreenGlThread(context));
+    }
   }
 
+  @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
   public void replaceView(OpenGlView openGlView) {
     replaceGlInterface(openGlView);
   }
 
+  @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
   public void replaceView(LightOpenGlView lightOpenGlView) {
     replaceGlInterface(lightOpenGlView);
   }
@@ -397,8 +408,9 @@ public abstract class Camera1Base
   /**
    * Replace glInterface used on fly. Ignored if you use SurfaceView or TextureView
    */
+  @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
   private void replaceGlInterface(GlInterface glInterface) {
-    if (this.glInterface != null) {
+    if (this.glInterface != null && Build.VERSION.SDK_INT >= 18) {
       if (isStreaming() || isRecording() || isOnPreview()) {
         cameraManager.stop();
         this.glInterface.removeMediaCodecSurface();
@@ -441,7 +453,7 @@ public abstract class Camera1Base
     if (!isStreaming() && !onPreview && !(glInterface instanceof OffScreenGlThread)) {
       previewWidth = width;
       previewHeight = height;
-      if (glInterface != null) {
+      if (glInterface != null && Build.VERSION.SDK_INT >= 18) {
         boolean isPortrait = CameraHelper.isPortrait(context);
         if (isPortrait) {
           glInterface.setEncoderSize(height, width);
@@ -494,7 +506,7 @@ public abstract class Camera1Base
         && !isRecording()
         && onPreview
         && !(glInterface instanceof OffScreenGlThread)) {
-      if (glInterface != null) {
+      if (glInterface != null && Build.VERSION.SDK_INT >= 18) {
         glInterface.stop();
       }
       cameraManager.stop();
@@ -524,11 +536,13 @@ public abstract class Camera1Base
     cameraManager.setZoom(event);
   }
 
+  @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
   public void startStreamAndRecord(String url, String path, RecordController.Listener listener) throws IOException {
     startStream(url);
     recordController.startRecord(path, listener);
   }
 
+  @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
   public void startStreamAndRecord(String url, String path) throws IOException {
     startStreamAndRecord(url, path, null);
   }
@@ -570,17 +584,17 @@ public abstract class Camera1Base
   }
 
   private void resetVideoEncoder(boolean reset) {
-    if (glInterface != null) {
+    if (glInterface != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
       glInterface.removeMediaCodecSurface();
     }
     if (reset) videoEncoder.reset(); else videoEncoder.forceKeyFrame();
-    if (glInterface != null) {
+    if (glInterface != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
       glInterface.addMediaCodecSurface(videoEncoder.getInputSurface());
     }
   }
 
   private void prepareGlView() {
-    if (glInterface != null) {
+    if (glInterface != null && Build.VERSION.SDK_INT >= 18) {
       if (glInterface instanceof OffScreenGlThread) {
         glInterface.init();
       }
@@ -614,7 +628,7 @@ public abstract class Camera1Base
     }
     if (!recordController.isRecording()) {
       if (audioInitialized) microphoneManager.stop();
-      if (glInterface != null) {
+      if (glInterface != null && Build.VERSION.SDK_INT >= 18) {
         glInterface.removeMediaCodecSurface();
         if (glInterface instanceof OffScreenGlThread) {
           glInterface.stop();
@@ -791,6 +805,7 @@ public abstract class Camera1Base
    *
    * @param bitrate H264 in bits per second.
    */
+  @RequiresApi(api = Build.VERSION_CODES.KITKAT)
   public void setVideoBitrateOnFly(int bitrate) {
     videoEncoder.setVideoBitrateOnFly(bitrate);
   }
@@ -848,7 +863,9 @@ public abstract class Camera1Base
 
   @Override
   public void getAacData(ByteBuffer aacBuffer, MediaCodec.BufferInfo info) {
-    recordController.recordAudio(aacBuffer, info);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+      recordController.recordAudio(aacBuffer, info);
+    }
     if (streaming) getAacDataRtp(aacBuffer, info);
   }
 
@@ -869,7 +886,9 @@ public abstract class Camera1Base
   @Override
   public void getVideoData(ByteBuffer h264Buffer, MediaCodec.BufferInfo info) {
     fpsListener.calculateFps();
-    recordController.recordVideo(h264Buffer, info);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+      recordController.recordVideo(h264Buffer, info);
+    }
     if (streaming) getH264DataRtp(h264Buffer, info);
   }
 

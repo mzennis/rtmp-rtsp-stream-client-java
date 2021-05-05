@@ -8,13 +8,13 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
+import com.pedro.encoder.R;
 import com.pedro.encoder.input.gl.Sprite;
 import com.pedro.encoder.input.gl.TextureLoader;
 import com.pedro.encoder.input.gl.render.filters.BaseFilterRender;
 import com.pedro.encoder.utils.gl.GlUtil;
 import com.pedro.encoder.utils.gl.StreamObjectBase;
 import com.pedro.encoder.utils.gl.TranslateTo;
-import com.pedro.broadcastlib.R;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -23,6 +23,8 @@ import java.nio.FloatBuffer;
 /**
  * Created by pedro on 03/08/18.
  */
+
+@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
 abstract public class BaseObjectFilterRender extends BaseFilterRender {
 
   //rotation matrix

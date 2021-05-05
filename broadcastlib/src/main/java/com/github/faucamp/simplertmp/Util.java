@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -90,8 +89,9 @@ public class Util {
   }
 
   public static String toHexString(byte b) {
-    return String.valueOf(HEXES.charAt((b & 0xF0) >> 4)) +
-            HEXES.charAt((b & 0x0F));
+    return new StringBuilder().append(HEXES.charAt((b & 0xF0) >> 4))
+        .append(HEXES.charAt((b & 0x0F)))
+        .toString();
   }
 
   /**
@@ -188,7 +188,7 @@ public class Util {
   public static String stringToMD5BASE64(String s) {
     try {
       MessageDigest md = MessageDigest.getInstance("MD5");
-      md.update(s.getBytes(StandardCharsets.UTF_8), 0, s.length());
+      md.update(s.getBytes("UTF-8"), 0, s.length());
       byte[] md5hash = md.digest();
       return Base64.encodeToString(md5hash, Base64.NO_WRAP);
     } catch (Exception e) {
@@ -218,8 +218,8 @@ public class Util {
     MessageDigest md;
     try {
       md = MessageDigest.getInstance("MD5");
-      return bytesToHex(md.digest(buffer.getBytes(StandardCharsets.UTF_8)));
-    } catch (NoSuchAlgorithmException ignore) {
+      return bytesToHex(md.digest(buffer.getBytes("UTF-8")));
+    } catch (NoSuchAlgorithmException | UnsupportedEncodingException ignore) {
     }
     return "";
   }

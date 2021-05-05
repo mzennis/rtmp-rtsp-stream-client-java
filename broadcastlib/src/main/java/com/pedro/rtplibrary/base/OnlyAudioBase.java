@@ -127,6 +127,7 @@ public abstract class OnlyAudioBase implements GetAacData, GetMicrophoneData {
    * @param path Where file will be saved.
    * @throws IOException If initialized before a stream.
    */
+  @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
   public void startRecord(String path, RecordController.Listener listener) throws IOException {
     recordController.startRecord(path, listener);
     if (!streaming) {
@@ -134,6 +135,7 @@ public abstract class OnlyAudioBase implements GetAacData, GetMicrophoneData {
     }
   }
 
+  @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
   public void startRecord(final String path) throws IOException {
     startRecord(path, null);
   }
@@ -161,6 +163,7 @@ public abstract class OnlyAudioBase implements GetAacData, GetMicrophoneData {
   /**
    * Stop record MP4 video started with @startRecord. If you don't call it file will be unreadable.
    */
+  @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
   public void stopRecord() {
     recordController.stopRecord();
     if (!streaming) stopStream();
@@ -310,7 +313,9 @@ public abstract class OnlyAudioBase implements GetAacData, GetMicrophoneData {
 
   @Override
   public void getAacData(ByteBuffer aacBuffer, MediaCodec.BufferInfo info) {
-    recordController.recordAudio(aacBuffer, info);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+      recordController.recordAudio(aacBuffer, info);
+    }
     if (streaming) getAacDataRtp(aacBuffer, info);
   }
 

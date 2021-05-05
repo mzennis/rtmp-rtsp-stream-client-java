@@ -17,6 +17,8 @@ import com.pedro.encoder.utils.gl.GlUtil;
 /**
  * Created by pedro on 9/09/17.
  */
+
+@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
 public class SurfaceManager {
 
   private static final int EGL_RECORDABLE_ANDROID = 0x3142;

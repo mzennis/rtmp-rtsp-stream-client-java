@@ -7,8 +7,8 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
+import com.pedro.encoder.R;
 import com.pedro.encoder.utils.gl.GlUtil;
-import com.pedro.broadcastlib.R;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -16,6 +16,8 @@ import java.nio.ByteOrder;
 /**
  * Created by pedro on 9/07/18.
  */
+
+@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
 public class RotationFilterRender extends BaseFilterRender {
 
   //rotation matrix

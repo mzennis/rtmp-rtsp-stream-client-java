@@ -11,6 +11,8 @@ import com.pedro.encoder.utils.gl.TextStreamObject;
 /**
  * Created by pedro on 27/07/18.
  */
+
+@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
 public class TextObjectFilterRender extends BaseObjectFilterRender {
 
   private String text;

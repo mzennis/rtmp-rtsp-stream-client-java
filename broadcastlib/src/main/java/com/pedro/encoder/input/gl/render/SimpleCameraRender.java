@@ -10,10 +10,10 @@ import android.view.Surface;
 
 import androidx.annotation.RequiresApi;
 
+import com.pedro.encoder.R;
 import com.pedro.encoder.input.video.CameraHelper;
 import com.pedro.encoder.utils.gl.GlUtil;
 import com.pedro.encoder.utils.gl.SizeCalculator;
-import com.pedro.broadcastlib.R;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -22,6 +22,8 @@ import java.nio.FloatBuffer;
 /**
  * Created by pedro on 21/02/18.
  */
+
+@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
 public class SimpleCameraRender {
   public final static String TAG = "SimpleCameraRender";
 

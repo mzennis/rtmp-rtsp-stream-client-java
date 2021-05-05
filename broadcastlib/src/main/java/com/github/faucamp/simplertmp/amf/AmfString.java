@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
 
 /**
  * @author francois
@@ -56,7 +55,7 @@ public class AmfString implements AmfData {
   @Override
   public void writeTo(OutputStream out) throws IOException {
     // Strings are ASCII encoded
-    byte[] byteValue = this.value.getBytes(StandardCharsets.US_ASCII);
+    byte[] byteValue = this.value.getBytes("ASCII");
     // Write the STRING data type definition (except if this String is used as a key)
     if (!key) {
       out.write(AmfType.STRING.getValue());
@@ -75,7 +74,7 @@ public class AmfString implements AmfData {
     // Read string value
     byte[] byteValue = new byte[length];
     Util.readBytesUntilFull(in, byteValue);
-    value = new String(byteValue, StandardCharsets.US_ASCII);
+    value = new String(byteValue, "ASCII");
   }
 
   public static String readStringFrom(InputStream in, boolean isKey) throws IOException {
@@ -87,13 +86,13 @@ public class AmfString implements AmfData {
     // Read string value
     byte[] byteValue = new byte[length];
     Util.readBytesUntilFull(in, byteValue);
-    return new String(byteValue, StandardCharsets.US_ASCII);
+    return new String(byteValue, "ASCII");
   }
 
   public static void writeStringTo(OutputStream out, String string, boolean isKey)
       throws IOException {
     // Strings are ASCII encoded
-    byte[] byteValue = string.getBytes(StandardCharsets.US_ASCII);
+    byte[] byteValue = string.getBytes("ASCII");
     // Write the STRING data type definition (except if this String is used as a key)
     if (!isKey) {
       out.write(AmfType.STRING.getValue());
@@ -107,14 +106,24 @@ public class AmfString implements AmfData {
   @Override
   public int getSize() {
     if (size == -1) {
-      size = (isKey() ? 0 : 1) + 2 + value.getBytes(StandardCharsets.US_ASCII).length;
+      try {
+        size = (isKey() ? 0 : 1) + 2 + value.getBytes("ASCII").length;
+      } catch (UnsupportedEncodingException ex) {
+        Log.e(TAG, "AmfString.getSize(): caught exception", ex);
+        throw new RuntimeException(ex);
+      }
     }
     return size;
   }
 
   /** @return the byte size of the resulting AMF string of the specified value */
   public static int sizeOf(String string, boolean isKey) {
-    int size = (isKey ? 0 : 1) + 2 + string.getBytes(StandardCharsets.US_ASCII).length;
-    return size;
+    try {
+      int size = (isKey ? 0 : 1) + 2 + string.getBytes("ASCII").length;
+      return size;
+    } catch (UnsupportedEncodingException ex) {
+      Log.e(TAG, "AmfString.SizeOf(): caught exception", ex);
+      throw new RuntimeException(ex);
+    }
   }
 }

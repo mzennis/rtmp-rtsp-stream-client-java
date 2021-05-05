@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) 2013 Xcellent Creations, Inc.
  * Copyright 2014 Google, Inc. All rights reserved.
  *
@@ -189,7 +189,7 @@ public class GifDecoder {
   }
 
   public GifDecoder(BitmapProvider provider, GifHeader gifHeader, ByteBuffer rawData,
-                    int sampleSize) {
+      int sampleSize) {
     this(provider);
     setData(gifHeader, rawData, sampleSize);
   }
