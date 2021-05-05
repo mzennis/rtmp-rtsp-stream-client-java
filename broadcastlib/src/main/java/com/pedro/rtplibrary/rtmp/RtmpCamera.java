@@ -3,13 +3,13 @@ package com.pedro.rtplibrary.rtmp;
 import android.content.Context;
 import android.media.MediaCodec;
 import android.os.Build;
+import android.view.SurfaceView;
+import android.view.TextureView;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
-import com.pedro.encoder.input.decoder.AudioDecoderInterface;
-import com.pedro.encoder.input.decoder.VideoDecoderInterface;
-import com.pedro.rtplibrary.base.FromFileBase;
+import com.pedro.rtplibrary.base.CameraBase;
 import com.pedro.rtplibrary.view.LightOpenGlView;
 import com.pedro.rtplibrary.view.OpenGlView;
 
@@ -20,36 +20,49 @@ import java.nio.ByteBuffer;
 
 /**
  * More documentation see:
- * {@link FromFileBase}
+ * {@link CameraBase}
  *
- * Created by pedro on 26/06/17.
+ * Created by pedro on 6/07/17.
  */
-@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
-public class RtmpFromFile extends FromFileBase {
+@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+public class RtmpCamera extends CameraBase {
 
   private SrsFlvMuxer srsFlvMuxer;
 
-  public RtmpFromFile(ConnectCheckerRtmp connectChecker,
-      VideoDecoderInterface videoDecoderInterface, AudioDecoderInterface audioDecoderInterface) {
-    super(videoDecoderInterface, audioDecoderInterface);
+  /**
+   * @deprecated This view produce rotations problems and could be unsupported in future versions.
+   * Use {@link CameraBase#CameraBase(OpenGlView)} or {@link CameraBase#CameraBase(LightOpenGlView)}
+   * instead.
+   */
+  @Deprecated
+  public RtmpCamera(SurfaceView surfaceView, ConnectCheckerRtmp connectChecker) {
+    super(surfaceView);
     srsFlvMuxer = new SrsFlvMuxer(connectChecker);
   }
 
-  public RtmpFromFile(Context context, ConnectCheckerRtmp connectChecker,
-      VideoDecoderInterface videoDecoderInterface, AudioDecoderInterface audioDecoderInterface) {
-    super(context, videoDecoderInterface, audioDecoderInterface);
+  /**
+   * @deprecated This view produce rotations problems and could be unsupported in future versions.
+   * Use {@link CameraBase#CameraBase(OpenGlView)} or {@link CameraBase#CameraBase(LightOpenGlView)}
+   * instead.
+   */
+  @Deprecated
+  public RtmpCamera(TextureView textureView, ConnectCheckerRtmp connectChecker) {
+    super(textureView);
     srsFlvMuxer = new SrsFlvMuxer(connectChecker);
   }
 
-  public RtmpFromFile(OpenGlView openGlView, ConnectCheckerRtmp connectChecker,
-      VideoDecoderInterface videoDecoderInterface, AudioDecoderInterface audioDecoderInterface) {
-    super(openGlView, videoDecoderInterface, audioDecoderInterface);
+  public RtmpCamera(OpenGlView openGlView, ConnectCheckerRtmp connectChecker) {
+    super(openGlView);
     srsFlvMuxer = new SrsFlvMuxer(connectChecker);
   }
 
-  public RtmpFromFile(LightOpenGlView lightOpenGlView, ConnectCheckerRtmp connectChecker,
-      VideoDecoderInterface videoDecoderInterface, AudioDecoderInterface audioDecoderInterface) {
-    super(lightOpenGlView, videoDecoderInterface, audioDecoderInterface);
+  public RtmpCamera(LightOpenGlView lightOpenGlView, ConnectCheckerRtmp connectChecker) {
+    super(lightOpenGlView);
+    srsFlvMuxer = new SrsFlvMuxer(connectChecker);
+  }
+
+  public RtmpCamera(Context context, boolean useOpengl, ConnectCheckerRtmp connectChecker) {
+    super(context, useOpengl);
     srsFlvMuxer = new SrsFlvMuxer(connectChecker);
   }
 
@@ -170,6 +183,11 @@ public class RtmpFromFile extends FromFileBase {
   }
 
   @Override
+  protected void getAacDataRtp(ByteBuffer aacBuffer, MediaCodec.BufferInfo info) {
+    srsFlvMuxer.sendAudio(aacBuffer, info);
+  }
+
+  @Override
   protected void onSpsPpsVpsRtp(ByteBuffer sps, ByteBuffer pps, ByteBuffer vps) {
     srsFlvMuxer.setSpsPPs(sps, pps);
   }
@@ -180,12 +198,8 @@ public class RtmpFromFile extends FromFileBase {
   }
 
   @Override
-  protected void getAacDataRtp(ByteBuffer aacBuffer, MediaCodec.BufferInfo info) {
-    srsFlvMuxer.sendAudio(aacBuffer, info);
-  }
-
-  @Override
   public void setLogs(boolean enable) {
     srsFlvMuxer.setLogs(enable);
   }
 }
+

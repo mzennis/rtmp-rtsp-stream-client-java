@@ -54,7 +54,7 @@ import static com.pedro.encoder.input.video.CameraHelper.getFingerSpacing;
  */
 
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-public class Camera2ApiManager extends CameraDevice.StateCallback {
+public class CameraApiManager extends CameraDevice.StateCallback {
 
   private final String TAG = "Camera2ApiManager";
 
@@ -89,7 +89,7 @@ public class Camera2ApiManager extends CameraDevice.StateCallback {
   private boolean faceDetectionEnabled = false;
   private int faceDetectionMode;
 
-  public Camera2ApiManager(Context context) {
+  public CameraApiManager(Context context) {
     cameraManager = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
   }
 
@@ -134,7 +134,7 @@ public class Camera2ApiManager extends CameraDevice.StateCallback {
       cameraDevice.createCaptureSession(listSurfaces, new CameraCaptureSession.StateCallback() {
         @Override
         public void onConfigured(@NonNull CameraCaptureSession cameraCaptureSession) {
-          Camera2ApiManager.this.cameraCaptureSession = cameraCaptureSession;
+          CameraApiManager.this.cameraCaptureSession = cameraCaptureSession;
           try {
             CaptureRequest captureRequest = drawSurface(listSurfaces);
             if (captureRequest != null) {

@@ -3,13 +3,9 @@ package com.pedro.testapp
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
-import android.graphics.BitmapFactory
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.view.MotionEvent
 import android.view.SurfaceHolder
-import android.view.View
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.EditText
@@ -17,16 +13,11 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.pedro.encoder.input.gl.SpriteGestureController
-import com.pedro.encoder.input.gl.render.filters.`object`.GifObjectFilterRender
-import com.pedro.encoder.input.gl.render.filters.`object`.ImageObjectFilterRender
-import com.pedro.encoder.input.gl.render.filters.`object`.TextObjectFilterRender
 import com.pedro.encoder.input.video.CameraOpenException
-import com.pedro.encoder.utils.gl.TranslateTo
-import com.pedro.rtplibrary.rtmp.RtmpCamera2
+import com.pedro.rtplibrary.rtmp.RtmpCamera
 import com.pedro.rtplibrary.util.BitrateAdapter
 import com.pedro.rtplibrary.view.LightOpenGlView
 import net.ossrs.rtmp.ConnectCheckerRtmp
-import java.io.IOException
 
 class MainActivity : AppCompatActivity(),
         ConnectCheckerRtmp,
@@ -44,7 +35,7 @@ class MainActivity : AppCompatActivity(),
 //    private lateinit var btnGif: Button
     private lateinit var etUrl: EditText
 
-    private lateinit var rtmpCamera: RtmpCamera2
+    private lateinit var rtmpCamera: RtmpCamera
     private var bitrateAdapter: BitrateAdapter? = null
 
     private val spriteGestureController = SpriteGestureController()
@@ -108,7 +99,7 @@ class MainActivity : AppCompatActivity(),
     }
 
     private fun setupBroadcaster() {
-        rtmpCamera = RtmpCamera2(lightOpenGlView, this)
+        rtmpCamera = RtmpCamera(lightOpenGlView, this)
         val audio = rtmpCamera.prepareAudio()
         val video = rtmpCamera.prepareVideo(1280, 720, 900 * 1024)
 
