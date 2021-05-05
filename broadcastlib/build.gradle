@@ -33,8 +33,6 @@ android {
 }
 
 dependencies {
-    api project(':encoder')
-    api project(':rtmp')
-
+    api 'androidx.annotation:annotation:1.2.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }

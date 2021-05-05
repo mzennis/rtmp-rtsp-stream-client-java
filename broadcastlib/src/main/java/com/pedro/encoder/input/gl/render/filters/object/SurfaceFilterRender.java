@@ -13,7 +13,7 @@ import android.view.Surface;
 
 import androidx.annotation.RequiresApi;
 
-import com.pedro.encoder.R;
+import com.pedro.broadcastlib.R;
 import com.pedro.encoder.input.gl.Sprite;
 import com.pedro.encoder.utils.gl.GlUtil;
 import com.pedro.encoder.utils.gl.TranslateTo;

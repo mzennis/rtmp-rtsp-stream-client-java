@@ -77,9 +77,13 @@ class MainActivity : AppCompatActivity(),
 
         btnStartStop.setOnClickListener {
             if (!rtmpCamera.isStreaming) {
-                btnStartStop.setText(R.string.stop_button)
-                rtmpCamera.startStream(etUrl.text.toString())
-
+                // need to re-prepare every time start streaming
+                val audio = rtmpCamera.prepareAudio()
+                val video = rtmpCamera.prepareVideo(1280, 720, 900 * 1024)
+                if (audio && video) {
+                    btnStartStop.setText(R.string.stop_button)
+                    rtmpCamera.startStream(etUrl.text.toString())
+                } else showToaster("Error preparing stream, This device cant do it")
             } else {
                 btnStartStop.setText(R.string.start_button)
                 rtmpCamera.stopStream()
@@ -100,12 +104,6 @@ class MainActivity : AppCompatActivity(),
 
     private fun setupBroadcaster() {
         rtmpCamera = RtmpCamera(lightOpenGlView, this)
-        val audio = rtmpCamera.prepareAudio()
-        val video = rtmpCamera.prepareVideo(1280, 720, 900 * 1024)
-
-        if (!audio || !video) {
-            showToaster("Error preparing stream, This device cant do it")
-        }
     }
 
     override fun onConnectionStartedRtmp(rtmpUrl: String?) {

@@ -10,7 +10,7 @@ import android.view.Surface;
 
 import androidx.annotation.RequiresApi;
 
-import com.pedro.encoder.R;
+import com.pedro.broadcastlib.R;
 import com.pedro.encoder.input.video.CameraHelper;
 import com.pedro.encoder.utils.gl.GlUtil;
 
