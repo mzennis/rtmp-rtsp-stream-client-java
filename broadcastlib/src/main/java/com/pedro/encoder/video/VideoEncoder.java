@@ -31,7 +31,7 @@ import java.util.List;
 
 public class VideoEncoder extends BaseEncoder implements GetCameraData {
 
-  private GetVideoData getVideoData;
+  private VideoEncoderListener videoEncoderListener;
   private boolean spsPpsSetted = false;
   private boolean forceKey = false;
 
@@ -51,8 +51,8 @@ public class VideoEncoder extends BaseEncoder implements GetCameraData {
   private int avcProfile = -1;
   private int avcProfileLevel = -1;
 
-  public VideoEncoder(GetVideoData getVideoData) {
-    this.getVideoData = getVideoData;
+  public VideoEncoder(VideoEncoderListener videoEncoderListener) {
+    this.videoEncoderListener = videoEncoderListener;
     TAG = "VideoEncoder";
   }
 
@@ -133,8 +133,7 @@ public class VideoEncoder extends BaseEncoder implements GetCameraData {
       }
       codec.configure(videoFormat, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
       running = false;
-      if (formatVideoEncoder == FormatVideoEncoder.SURFACE
-          && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+      if (formatVideoEncoder == FormatVideoEncoder.SURFACE) {
         isBufferMode = false;
         inputSurface = codec.createInputSurface();
       }
@@ -180,12 +179,7 @@ public class VideoEncoder extends BaseEncoder implements GetCameraData {
   }
 
   public void forceKeyFrame() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-      requestKeyframe();
-    } else {
-      //The only way to force keyframe if api < 19 is reset it.
-      reset();
-    }
+    requestKeyframe();
   }
 
   @Override
@@ -299,10 +293,10 @@ public class VideoEncoder extends BaseEncoder implements GetCameraData {
     if (type.equals(CodecUtil.H265_MIME)) {
       List<ByteBuffer> byteBufferList =
           extractVpsSpsPpsFromH265(mediaFormat.getByteBuffer("csd-0"));
-      getVideoData.onSpsPpsVps(byteBufferList.get(1), byteBufferList.get(2), byteBufferList.get(0));
+      videoEncoderListener.onSpsPpsVpsReceived(byteBufferList.get(1), byteBufferList.get(2), byteBufferList.get(0));
       //H264
     } else {
-      getVideoData.onSpsPps(mediaFormat.getByteBuffer("csd-0"), mediaFormat.getByteBuffer("csd-1"));
+      videoEncoderListener.onSpsPpsReceived(mediaFormat.getByteBuffer("csd-0"), mediaFormat.getByteBuffer("csd-1"));
     }
   }
 
@@ -453,7 +447,7 @@ public class VideoEncoder extends BaseEncoder implements GetCameraData {
 
   @Override
   public void formatChanged(@NonNull MediaCodec mediaCodec, @NonNull MediaFormat mediaFormat) {
-    getVideoData.onVideoFormat(mediaFormat);
+    videoEncoderListener.onVideoFormatChanged(mediaFormat);
     sendSPSandPPS(mediaFormat);
     spsPpsSetted = true;
   }
@@ -461,7 +455,7 @@ public class VideoEncoder extends BaseEncoder implements GetCameraData {
   @Override
   protected void checkBuffer(@NonNull ByteBuffer byteBuffer,
       @NonNull MediaCodec.BufferInfo bufferInfo) {
-    if (forceKey && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+    if (forceKey) {
       forceKey = false;
       requestKeyframe();
     }
@@ -471,7 +465,7 @@ public class VideoEncoder extends BaseEncoder implements GetCameraData {
         Pair<ByteBuffer, ByteBuffer> buffers =
             decodeSpsPpsFromBuffer(byteBuffer.duplicate(), bufferInfo.size);
         if (buffers != null) {
-          getVideoData.onSpsPps(buffers.first, buffers.second);
+          videoEncoderListener.onSpsPpsReceived(buffers.first, buffers.second);
           spsPpsSetted = true;
         }
       }
@@ -484,6 +478,6 @@ public class VideoEncoder extends BaseEncoder implements GetCameraData {
   @Override
   protected void sendBuffer(@NonNull ByteBuffer byteBuffer,
       @NonNull MediaCodec.BufferInfo bufferInfo) {
-    getVideoData.getVideoData(byteBuffer, bufferInfo);
+    videoEncoderListener.onVideoDataReceived(byteBuffer, bufferInfo);
   }
 }

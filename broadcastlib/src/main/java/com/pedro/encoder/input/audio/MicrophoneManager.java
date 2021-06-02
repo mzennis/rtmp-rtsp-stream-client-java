@@ -23,7 +23,7 @@ public class MicrophoneManager {
   private final String TAG = "MicrophoneManager";
   private int BUFFER_SIZE = 0;
   protected AudioRecord audioRecord;
-  private final GetMicrophoneData getMicrophoneData;
+  private final MicrophoneListener listener;
   protected ByteBuffer pcmBuffer = ByteBuffer.allocateDirect(BUFFER_SIZE);
   protected byte[] pcmBufferMuted = new byte[BUFFER_SIZE];
   protected boolean running = false;
@@ -37,8 +37,8 @@ public class MicrophoneManager {
   protected HandlerThread handlerThread;
   protected CustomAudioEffect customAudioEffect = new NoAudioEffect();
 
-  public MicrophoneManager(GetMicrophoneData getMicrophoneData) {
-    this.getMicrophoneData = getMicrophoneData;
+  public MicrophoneManager(MicrophoneListener listener) {
+    this.listener = listener;
   }
 
   public void setCustomAudioEffect(CustomAudioEffect customAudioEffect) {
@@ -152,7 +152,7 @@ public class MicrophoneManager {
         while (running) {
           Frame frame = read();
           if (frame != null) {
-            getMicrophoneData.inputPCMData(frame);
+            listener.inputPCMData(frame);
           }
         }
       }

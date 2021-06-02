@@ -1,5 +1,5 @@
 package com.pedro.encoder
 
-interface GetFrame {
+interface FrameListener {
     val inputFrame: Frame?
 }

@@ -4,7 +4,7 @@ import android.os.HandlerThread;
 import android.util.Log;
 
 import com.pedro.encoder.Frame;
-import com.pedro.encoder.GetFrame;
+import com.pedro.encoder.FrameListener;
 
 import java.nio.ByteBuffer;
 
@@ -12,7 +12,7 @@ import java.nio.ByteBuffer;
  * Similar to MicrophoneManager but samples are not read automatically.
  * The owner must manually call read(...) as often as samples are needed.
  */
-public class MicrophoneManagerManual extends MicrophoneManager implements GetFrame {
+public class MicrophoneManagerManual extends MicrophoneManager implements FrameListener {
 
   private final String TAG = "MicMM";
 
@@ -58,7 +58,7 @@ public class MicrophoneManagerManual extends MicrophoneManager implements GetFra
     super.stop();
   }
 
-  public GetFrame getGetFrame() {
+  public FrameListener getGetFrame() {
     return this;
   }
 

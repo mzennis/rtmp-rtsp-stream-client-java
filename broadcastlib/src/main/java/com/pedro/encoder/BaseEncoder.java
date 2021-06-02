@@ -90,7 +90,7 @@ public abstract class BaseEncoder implements EncoderCallback {
   }
 
   private void reloadCodec() {
-    //Sometimes encoder crash, we will try recover it. Reset encoder a time if crash
+    // Sometimes encoder crash, we will try recover it. Reset encoder a time if crash
     if (shouldReset) {
       Log.e(TAG, "Encoder crashed, trying to recover it");
       reset();

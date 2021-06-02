@@ -20,9 +20,9 @@ import androidx.annotation.RequiresApi;
 
 import com.pedro.encoder.Frame;
 import com.pedro.encoder.audio.AudioEncoder;
-import com.pedro.encoder.audio.GetAacData;
+import com.pedro.encoder.audio.AudioEncoderListener;
 import com.pedro.encoder.input.audio.CustomAudioEffect;
-import com.pedro.encoder.input.audio.GetMicrophoneData;
+import com.pedro.encoder.input.audio.MicrophoneListener;
 import com.pedro.encoder.input.audio.MicrophoneManager;
 import com.pedro.encoder.input.audio.MicrophoneManagerManual;
 import com.pedro.encoder.input.audio.MicrophoneMode;
@@ -32,7 +32,7 @@ import com.pedro.encoder.input.video.CameraHelper;
 import com.pedro.encoder.input.video.CameraOpenException;
 import com.pedro.encoder.utils.CodecUtil;
 import com.pedro.encoder.video.FormatVideoEncoder;
-import com.pedro.encoder.video.GetVideoData;
+import com.pedro.encoder.video.VideoEncoderListener;
 import com.pedro.encoder.video.VideoEncoder;
 import com.pedro.rtplibrary.util.FpsListener;
 import com.pedro.rtplibrary.util.RecordController;
@@ -58,13 +58,15 @@ import java.util.List;
  * Created by pedro on 7/07/17.
  */
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-public abstract class CameraBase implements GetAacData, GetVideoData, GetMicrophoneData {
+public abstract class CameraBase implements AudioEncoderListener, VideoEncoderListener, MicrophoneListener {
 
   private static final String TAG = "Camera2Base";
 
   protected Context context;
-  private CameraApiManager cameraManager;
   protected VideoEncoder videoEncoder;
+  protected RecordController recordController;
+
+  private CameraApiManager cameraManager;
   private MicrophoneManager microphoneManager;
   private AudioEncoder audioEncoder;
   private boolean streaming = false;
@@ -75,7 +77,6 @@ public abstract class CameraBase implements GetAacData, GetVideoData, GetMicroph
   private boolean audioInitialized = false;
   private boolean onPreview = false;
   private boolean isBackground = false;
-  protected RecordController recordController;
   private int previewWidth, previewHeight;
   private FpsListener fpsListener = new FpsListener();
 
@@ -146,7 +147,7 @@ public abstract class CameraBase implements GetAacData, GetVideoData, GetMicroph
       case SYNC:
         microphoneManager = new MicrophoneManagerManual();
         audioEncoder = new AudioEncoder(this);
-        audioEncoder.setGetFrame(((MicrophoneManagerManual) microphoneManager).getGetFrame());
+        audioEncoder.setFrameListener(((MicrophoneManagerManual) microphoneManager).getGetFrame());
         break;
       case ASYNC:
         microphoneManager = new MicrophoneManager(this);
@@ -922,30 +923,30 @@ public abstract class CameraBase implements GetAacData, GetVideoData, GetMicroph
     return onPreview;
   }
 
-  protected abstract void getAacDataRtp(ByteBuffer aacBuffer, MediaCodec.BufferInfo info);
+  protected abstract void onAacDataRtpReceived(ByteBuffer aacBuffer, MediaCodec.BufferInfo info);
 
   @Override
-  public void getAacData(ByteBuffer aacBuffer, MediaCodec.BufferInfo info) {
+  public void onAacDataReceived(ByteBuffer aacBuffer, MediaCodec.BufferInfo info) {
     recordController.recordAudio(aacBuffer, info);
-    if (streaming) getAacDataRtp(aacBuffer, info);
+    if (streaming) onAacDataRtpReceived(aacBuffer, info);
   }
 
-  protected abstract void onSpsPpsVpsRtp(ByteBuffer sps, ByteBuffer pps, ByteBuffer vps);
+  protected abstract void onSpsPpsVpsRtpReceived(ByteBuffer sps, ByteBuffer pps, ByteBuffer vps);
 
   @Override
-  public void onSpsPps(ByteBuffer sps, ByteBuffer pps) {
-    if (streaming) onSpsPpsVpsRtp(sps, pps, null);
+  public void onSpsPpsReceived(ByteBuffer sps, ByteBuffer pps) {
+    if (streaming) onSpsPpsVpsRtpReceived(sps, pps, null);
   }
 
   @Override
-  public void onSpsPpsVps(ByteBuffer sps, ByteBuffer pps, ByteBuffer vps) {
-    if (streaming) onSpsPpsVpsRtp(sps, pps, vps);
+  public void onSpsPpsVpsReceived(ByteBuffer sps, ByteBuffer pps, ByteBuffer vps) {
+    if (streaming) onSpsPpsVpsRtpReceived(sps, pps, vps);
   }
 
   protected abstract void getH264DataRtp(ByteBuffer h264Buffer, MediaCodec.BufferInfo info);
 
   @Override
-  public void getVideoData(ByteBuffer h264Buffer, MediaCodec.BufferInfo info) {
+  public void onVideoDataReceived(ByteBuffer h264Buffer, MediaCodec.BufferInfo info) {
     fpsListener.calculateFps();
     recordController.recordVideo(h264Buffer, info);
     if (streaming) getH264DataRtp(h264Buffer, info);
@@ -957,12 +958,12 @@ public abstract class CameraBase implements GetAacData, GetVideoData, GetMicroph
   }
 
   @Override
-  public void onVideoFormat(MediaFormat mediaFormat) {
+  public void onVideoFormatChanged(MediaFormat mediaFormat) {
     recordController.setVideoFormat(mediaFormat);
   }
 
   @Override
-  public void onAudioFormat(MediaFormat mediaFormat) {
+  public void onAudioFormatChanged(MediaFormat mediaFormat) {
     recordController.setAudioFormat(mediaFormat);
   }
 
