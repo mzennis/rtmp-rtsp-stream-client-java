@@ -562,8 +562,9 @@ public abstract class Camera2Base implements GetAacData, GetVideoData, GetMicrop
     if (audioInitialized) audioEncoder.start();
     prepareGlView();
     if (audioInitialized) microphoneManager.start();
-    if (glInterface == null && !cameraManager.isRunning() && videoEncoder.getWidth() != previewWidth
-        || videoEncoder.getHeight() != previewHeight) {
+    if (glInterface == null && !cameraManager.isRunning()
+//            && videoEncoder.getWidth() != previewWidth || videoEncoder.getHeight() != previewHeight
+    ) {
       cameraManager.openLastCamera();
     }
     onPreview = true;
